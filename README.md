@@ -10,12 +10,13 @@ A package created to automate many of the tasks associated with creating &amp; d
 ### Optional
 
 * [Python 3](https://www.python.org/download/releases/3.0/) - There is a python script in here that makes your life easier, but it is not necessary. Saves some dragging of files.
+* [Sublime Text](https://www.sublimetext.com/) - Any native text editor will work, but Sublime makes for a more comfortable experience.
 
 ## Getting Started
 
 Programmers bear with me, I am writing this README also for non-programmers in the video industry.
 
-The crux of this package is rooted in the ```stationSpecs.jsx``` file, inside the ```stationSpecs``` variable. It's in here that you will input your station data. For example, here is how that data should be entered:
+The crux of this package is rooted in the ```stationSpecs.jsx``` file, inside the ```stationSpecs``` variable. It's in here that you will input your station data. You will need to open this in a native text editor or one you've downloaded like Sublime, recommended above. For example, here is how that data should be entered:
 
 ```
 var stationSpecs = {
@@ -63,7 +64,7 @@ var stationSpecs = {
          },
 ```         
 
-In addition to creating a centralized location for all your station specs/delivery data, this JSON object will also power the automation in this package. Here we have an example of 2 TV stations (Spectrum and WGRZ) and 1 distribution company (Extreme Reach). The metadata for each is imperative to how the script creates files and how the HTML files display the data. I'll break down each category as follows: 
+Save your changes. In addition to creating a centralized location for all your station specs/delivery data, this JSON object will also power the automation in this package. Here we have an example of 2 TV stations (Spectrum and WGRZ) and 1 distribution company (Extreme Reach). The metadata for each is imperative to how the script creates files and how the HTML files display the data. I'll break down each category as follows: 
 
 * **'slate'** : Enter an integer here that represents the total length of the slate.
 * **'pre-slate**' : Enter an integer here that represents the total length of black needed before the slate.
@@ -80,8 +81,58 @@ In addition to creating a centralized location for all your station specs/delive
 
 ## Next Steps
 
-Now that you have your station data input into the ```stationSpecs,jsx``` file, there are a couple things you should take care of next. First, the slate that is being referenced in the script goes in the ```elements``` folder. I included a generic one called slate.mov, but if you want to use a custom one just replace that file. However, make sure the following is true:
+### Custom Slate
+Now that you have your station data input into the ```stationSpecs.jsx``` file, there are a couple things you should take care of next. First, the slate that is being referenced in the script goes in the ```elements``` folder. I included a generic one called slate.mov, but if you want to use a custom one just replace that file. However, make sure the following is true:
 
-* slate format is MOV, unless you feel like altering the mainScript code - line 60 as of writing this.
+* slate format is MOV. If you want to change the name or file extension of the slate file, you will need to do update that info in ```fileCreationScript.jsx```. More info on that below.
 * total length of slate is 7 seconds.
 * slate counts down from 7 to 0, the final 2 seconds being just black.
+
+### Create Watch Folders
+Unfortunately, as I understand it, the current versions of After Effects do not allow you to export the full breadth of options something like Media Encoder does, this includes popular station specs like MPEG2. This necessitated my need to involve AME watch folders in this process. **FOR EVERY STATION YOU ADD TO ```stationSpecs.jsx```, YOU MUST CREATE A CORRESPONDING WATCH FOLDER.**
+
+Watch folders wait for a video file to be rendered into them, at which point they will transcode the file into any number of different specs you designate. For more on watch folders and how to create them, see [here](https://larryjordan.com/articles/adobe-media-encoder-watch-folders/). Here you can see an example of my watch folder setup for the 3 example stations:
+
+![Watch Folders](https://i.imgur.com/ATMwGJg.png)
+
+Please note, the final folder destination for these watch folders is ```<station_name>/Output/```. ```Output/``` is generated automatically by Adobe Media Encoder, so all you need to do when you set up your watch folders is:
+         
+* All your station watch folders sit together as subfolders of one file path.
+* Make sure the ```<station_name>``` folder name matches the ```stationSpecs``` station ID **EXACTLY.** Capital/lowercase letters and all. The routing to the watch folders relies on ```stationSpecs.```
+
+As stated before, these watch folders must all live as subfolders in one master folder. As you can see in my screenshot, mine is ```.../_STATION_FILES_/```. Your path will depend on your computer. Once your watch folders are set and you have your path to them, it's time to open up ```fileCreationScript.jsx``` in your text editor. At the top of the script you will see the following:
+
+```
+//****************USER INPUT INFO HERE. CHANGE NOTHING ABOVE THIS LINE.*******************
+var pathToWatchFolders = '/path/to/your/_STATION_FILES_/';
+var masterFileExtension = '.mov';
+var slateFileName = 'slate.mov';
+var slateFont = 'Gotham Bold';
+var slateFontSize = 55;
+var slateFontColor = [1,1,1];
+var aeRenderPreset = 'ProRes';
+//****************USER INPUT INFO HERE. CHANGE NOTHING BELOW THIS LINE.*******************
+
+```
+Paste or type your watch folder path in between the quotes in ```pathToWatchFolders```. Save.
+
+### Main Script Customizations
+
+Let's move on to the other 6 variables in ```mainScript.jsx```. Beyond adding the file path to the watch folders, you can also change 6 other conditions of the script. These are:
+
+* **masterFileExtension** - Eventually you will be placing your master renders in the ```masters/``` folder. In order for the script to import these files to AE without error (that can come from trying to handle hidden files), you need to specify file extensions to import. My post house uses ProRes and DNXHD MOVs. So I put ```'.mov'``` as the default. If you use files of a different container as your masters, just change the extension here.
+* **slateFileName** - As referenced earlier in this document, here is where you can alter the slate file name. If you replace the slate in ```elements/``` and it's no longer named the default ```slate.mov```, you will need to change this here, lest the script break!
+* **slateFont** - Enter the name of the font as it appears in the character window in AE.
+* **slateFontSize** - Enter the size of the font as it appears in the character window in AE.
+* **slateFontColor** - Enter the color you want your slate text to be. Use any RGB value (0-1 range) you want in the array [red, green, blue]. The default is [1,1,1] or white.
+* **aeRenderPreset** - After effects handles importing the masters, adding necessary slates, then rendering out to AME where the watch folders take over. This is where you tell After Effects what setting to use when rendering. When you are in the Render Queue in AE, this is the exact name in the ```Output Module``` field. I went ahead and created a preset called ```ProRes```. You can create you own preset like me, or use a default AE setting like ```Lossless``` etc.
+
+Congratulations! Your setup is done. Now onto the fun stuff - the automation!
+
+## Running the File Creation Script
+
+It's meat & potatoes time! You suffered the headache of setting up the above, now it's time to reap the rewards! Your downloaded **ez_distribution** file structure looks like this:
+
+![ez_distribution files 1](https://i.imgur.com/xJOXpbb.png)
+
+Save this as your base folder. You will use this to update station info or anything that we covered above - anything that will apply to all future projects. 
