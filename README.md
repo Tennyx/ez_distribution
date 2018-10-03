@@ -147,6 +147,7 @@ It's meat & potatoes time! You suffered the headache of setting up the above, no
 Save this as your base folder. You will use this to update station info or anything that we covered above - anything that will apply to all future projects. When a job comes in that needs distribution to stations:
 
 1. Duplicate this folder and rename it as the relevant project:
+
 ![duplicate folder](https://media.giphy.com/media/DN1NcggW6pXnANgrVX/giphy.gif)
 
 2. Add your master file(s) to the ```masters``` folder. **EITHER NOW OR SOME TIME BEFORE YOU RUN THE SCRIPT, MAKE SURE YOUR VIDEO FILES ARE NAMED AS THE APPROPRIATE ISCI CODE**.
