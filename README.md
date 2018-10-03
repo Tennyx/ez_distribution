@@ -151,9 +151,11 @@ Save this as your base folder. You will use this to update station info or anyth
 ![duplicate folder](https://media.giphy.com/media/DN1NcggW6pXnANgrVX/giphy.gif)
 
 2. Add your master file(s) to the ```masters``` folder. **EITHER NOW OR SOME TIME BEFORE YOU RUN THE SCRIPT, MAKE SURE YOUR VIDEO FILES ARE NAMED AS THE APPROPRIATE ISCI CODE**.
+
 ![add masters](https://media.giphy.com/media/9G3xt4PyiesGLMSHKM/giphy.gif)
 
 3. Next, open up ```metadata.jsx``` in your text editor to add the slate data. Inside this file, you will see a variable ```spotData``` with instructions on how to enter in spot metadata. Here is how this test project should look after all fields are filled (I used a screenshot of my Sublime text editor to make it easier to read. The colored text really helps you to pinpoint any errors you might make entering info, highly recommend!):
+
 ![add metadata](https://i.imgur.com/QXK2KTm.png)
 
 Save this file.
@@ -175,11 +177,13 @@ Also, the reason I emphasized naming the master files before running the script 
 So your files are made, you watched them all for QC - hopefully. Now it's time to distribute:
 
 1. In your job folder, double click on ```station-list.html``` to open a list of the stations on this job in your default browser. For this test job, mine looks like this:
+
 ![station list](https://i.imgur.com/6WPdYAy.png)
 
 2. Move down the list and user the **Delivery**, **Username** & **Password** data to quickly get your spots where they need to go.
 
 3. Once a spot has uploaded you can click the ```E-mail Reps``` button to bring up a filled-out e-mail window (via Apple Mail or Outlook) referencing the ISCIs in that project. Also, you can click on the checkboxes to keep track as you go down the list:
+
 ![e-mail example](https://i.imgur.com/GrFVxky.png)
 
 ## Bonus: Station Master List
