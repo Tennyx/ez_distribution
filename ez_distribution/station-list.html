@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Station Info</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+	<script src="station_specs/stationSpecs.jsx"></script>
+	<script src="metadata.jsx"></script>
+	<style>
+		.marked-complete {
+			background : #d3ffa0;
+		}
+
+		.checkbox-custom {
+			color : gray;
+		}
+	</style>
+	<script>
+		//*********ENTER COMPANY NAME FOR E-MAIL SUBJECT & BODY HERE*******
+		var companyName = 'COMPANY';
+		//*********CHANGE NOTHING BENEATH*******
+
+		function listISCIs(station){
+
+			var ISCIString = '';
+
+			for(var spot in spotData){
+				if((spotData[spot].stations).includes(station)){
+					ISCIString += '%0A' + spot;
+				}
+			}
+
+			if(stationSpecs[station].delivery.includes("Dropbox")){
+				return ISCIString + '%0A%0A<PASTE DROPBOX LINK HERE>%0A%0AThank you!';
+			}
+			else{
+				return ISCIString + '%0A%0AThank you!';
+			}
+		}
+
+		function listRelevantStations(){
+
+			var ISCIobj = {};
+			
+			for(var spot in spotData){
+				for(i=0;i<spotData[spot].stations.length;i++){
+					if(spotData[spot].stations[i] in ISCIobj){
+					}
+					else if(spotData[spot].stations[i] in stationSpecs){
+						ISCIobj[spotData[spot].stations[i]] = {};	
+					}
+				}
+			}
+
+			return ISCIobj;
+		}
+
+		$( document ).ready(function() {
+
+			$(function () {
+			  $('[data-toggle="popover"]').popover()
+			})
+
+			$('.station-list').on('click', '.checkbox-custom', function(){
+				$(this).closest('.card').toggleClass("marked-complete");
+
+				if(($(this).closest('.card').hasClass("marked-complete"))){
+					$(this).replaceWith('<i class="checkbox-custom far fa-check-square" style="font-size:3em;margin-top:15px"></i>');
+				}
+				else{
+					$(this).replaceWith('<i class="checkbox-custom far fa-square" style="font-size:3em;margin-top:15px"></i>');
+				}
+			});
+
+			var condensedStationList = listRelevantStations();
+
+			for(var station in condensedStationList){
+				$('.station-list').append(
+					'<div class="card">\
+						<div class="card-body text-center">\
+							<h5 class="card-title">'+ station +'</h5>' +
+								(stationSpecs[station].alt ? '<p class="card-text">Affiliated stations: ' + stationSpecs[station].alt + '</p>' : '') +
+							'<button type="button" class="btn btn-link" data-toggle="popover" data-html="true" title="' + stationSpecs[station].format + 
+							'" data-content="' + 
+								'<ul style=&quot;padding-left:15px&quot;>\
+									<li><b>Res: </b>' + stationSpecs[station].resolution[0] + ' x ' + stationSpecs[station].resolution[1] + '</li>' +
+									'<li><b>FPS: </b>' + stationSpecs[station].fps + '</li>' +
+									'<li><b>Fields: </b>' + stationSpecs[station].fields + '</li>' +
+									(
+										stationSpecs[station].slate ? 
+											'<li><b>Slate: </b>' + stationSpecs[station].slate + ' sec</li>' +
+											'<li><b>Pre-slate: </b>' + stationSpecs[station]['pre-slate'] + ' sec</li>' +
+											'<li><b>Post-video: </b>' + stationSpecs[station]['post-video'] + ' sec</li>'
+											: 
+											'<li>No Slate</li>'
+									) +
+								'</ul>'+ 
+							'">Click for Specs</button>\
+							<p class="card-text"><b>Delivery: </b>' + stationSpecs[station].delivery + '</p>'+
+							'<p class="card-text"><b>Username: </b>' + stationSpecs[station].username + '</p>' +
+							'<p class="card-text"><b>Password: </b>' + stationSpecs[station].password + '</p>' + 
+							'<a href="mailto:' + stationSpecs[station].reps + 
+								'?Subject=' + companyName + '%20Spot%20Confirmation' + 
+								'&body=Hello%20all!%20' + companyName +'%20is%20confirming%20upload%20of%20the%20following%20spots:%0A' +
+								listISCIs(station) +
+							'" class="btn btn-primary">E-mail Reps</a>\
+							<div><i class="checkbox-custom far fa-square" style="font-size:3em;margin-top:15px"></i></div>\
+						</div>\
+					</div>'
+				);
+			}
+		});
+
+	</script>
+</head>
+<body>
+	<div class="container text-center mt-5 mb-5">
+		<h3>Station Information</h3>
+		<h6>(Search stations with ctrl/cmd + F)</h6>
+	</div>
+	
+	<div class="station-list">
+		
+	</div>
+</body>
+</html>
