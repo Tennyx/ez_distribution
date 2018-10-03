@@ -124,7 +124,7 @@ Let's move on to the other 6 variables in ```mainScript.jsx```. Beyond adding th
 * **slateFont** - Enter the name of the font as it appears in the character window in AE.
 * **slateFontSize** - Enter the size of the font as it appears in the character window in AE.
 * **slateFontColor** - Enter the color you want your slate text to be. Use any RGB value (0-1 range) you want in the array [red, green, blue]. The default is [1,1,1] or white.
-* **aeRenderPreset** - After effects handles importing the masters, adding necessary slates, then rendering out to AME where the watch folders take over. This is where you tell After Effects what setting to use when rendering. When you are in the Render Queue in AE, this is the exact name in the ```Output Module``` field. I went ahead and created a preset called ```ProRes```. You can create you own preset like me, or use a default AE setting like ```Lossless``` etc.
+* **aeRenderPreset** - After effects handles importing the masters, adding necessary slates, then rendering out to AME where the watch folders take over. This is where you tell After Effects what setting to use when rendering. When you are in the Render Queue in AE, this is the exact name in the ```Output Module``` field. I went ahead and created a preset called ```ProRes```. You can create you own preset like me, or use a default AE setting like ```Lossless``` etc. Obviously you want to use something lossless or visually lossless because it's going to be transcoded by AME after.
 
 ### Prepping E-mail Automation
 
