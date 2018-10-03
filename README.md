@@ -9,7 +9,6 @@ A package created to automate many of the tasks associated with creating &amp; d
 
 ### Optional
 
-* [Python 3](https://www.python.org/download/releases/3.0/) - There is a python script in here that makes your life easier, but it is not necessary. Saves some dragging of files.
 * [Sublime Text](https://www.sublimetext.com/) - Any native text editor will work, but Sublime makes for a more comfortable experience.
 
 ## Getting Started
@@ -127,12 +126,63 @@ Let's move on to the other 6 variables in ```mainScript.jsx```. Beyond adding th
 * **slateFontColor** - Enter the color you want your slate text to be. Use any RGB value (0-1 range) you want in the array [red, green, blue]. The default is [1,1,1] or white.
 * **aeRenderPreset** - After effects handles importing the masters, adding necessary slates, then rendering out to AME where the watch folders take over. This is where you tell After Effects what setting to use when rendering. When you are in the Render Queue in AE, this is the exact name in the ```Output Module``` field. I went ahead and created a preset called ```ProRes```. You can create you own preset like me, or use a default AE setting like ```Lossless``` etc.
 
+### Prepping E-mail Automation
+
+Assuming you want to use the station distribution list, you will need to right click and open ```station-list.html``` in a text editor. You will see these lines of code:
+```
+//*********ENTER COMPANY NAME FOR E-MAIL SUBJECT & BODY HERE*******
+var companyName = 'COMPANY';
+//*********CHANGE NOTHING BENEATH*******
+```
+Replace 'COMPANY' with the name you want to show up in your e-mail subject and body.
+
 Congratulations! Your setup is done. Now onto the fun stuff - the automation!
 
-## Running the File Creation Script
+## Creating a New Project
 
-It's meat & potatoes time! You suffered the headache of setting up the above, now it's time to reap the rewards! Your downloaded **ez_distribution** file structure looks like this:
+It's meat & potatoes time! You suffered the headache of setting up the above, now it's time to reap the rewards! Your **ez_distribution** file structure looks like this:
 
 ![ez_distribution files 1](https://i.imgur.com/xJOXpbb.png)
 
-Save this as your base folder. You will use this to update station info or anything that we covered above - anything that will apply to all future projects. 
+Save this as your base folder. You will use this to update station info or anything that we covered above - anything that will apply to all future projects. When a job comes in that needs distribution to stations:
+
+1. Duplicate this folder and rename it as the relevant project:
+![duplicate folder](https://media.giphy.com/media/DN1NcggW6pXnANgrVX/giphy.gif)
+
+2. Add your master file(s) to the ```masters``` folder. **EITHER NOW OR SOME TIME BEFORE YOU RUN THE SCRIPT, MAKE SURE YOUR VIDEO FILES ARE NAMED AS THE APPROPRIATE ISCI CODE**.
+![add masters](https://media.giphy.com/media/9G3xt4PyiesGLMSHKM/giphy.gif)
+
+3. Next, open up ```metadata.jsx``` in your text editor to add the slate data. Inside this file, you will see a variable ```spotData``` with instructions on how to enter in spot metadata. Here is how this test project should look after all fields are filled (I used a screenshot of my Sublime text editor to make it easier to read. The colored text really helps you to pinpoint any errors you might make entering info, highly recommend!):
+![add metadata](https://i.imgur.com/QXK2KTm.png)
+
+Save this file.
+
+**Note**: See how I put the title on 2 lines. There is no word wrapping involved in this process, so basically what you see width-wise is what you will get on the slate. If you need an extra line, just hit return and type/paste it, make sure to end the new line with that backslash! Also, today's date is automatically added with the ```createTodaysDate()``` function. If, for whatever reason, you want to change the slate date, you need to swap that function with a string of the date.
+
+Also, the reason I emphasized naming the master files before running the script is because the script will cross reference this file and the video files in the ```masters/``` folder to do its magic.
+
+## Running the File Creation Script
+
+1. Your data is set! Time to open After Effects and run the script. Go to ```File->Scripts->Run Script File``` and run the ```fileCreationScript.jsx``` script.  Sit back and relax. The first thing that will happen is it will create a dummy comp in order to prompt AME to open - the reason being: watch folders don't work if AME isn't open. Then the script will make all the different versions as AE comps relevant to your ```stationSpecs.jsx``` slate/format specifications. It then renders these comps and sends them to their relevant watch folders. After renders are done, Media Encoder will finish up shortly after with whatever spot(s) it has left to tend to.
+
+2. Now, inside your job folder, check the ```station_files``` folder. There you will find folders labelled after the stations in the station list you input into ```metadata,jsx.``` In a perfect world/script, everything would be there, but unfortunately I was not able to figure out how to do this due to the dynamic nature of this system vs. the watch folder solution. SO, you will need to go to your watch folder outputs and drag over the corresponding files to their folders. (SORRY!)
+
+**Note:** Depending on your distribution system, you may think "why would I drag the files over? I'll just deliver them from the watch folders, dummy!" Well, at my post house I create files and don't always distribute them. So I tailored this for situations where you might then hand over the project folder to whoever distributes. You do you, though.
+
+## Using the Station Distribution List
+
+So your files are made, you watched them all for QC - hopefully. Now it's time to distribute:
+
+1. In your job folder, double click on ```station-list.html``` to open a list of the stations on this job in your default browser. For this test job, mine looks like this:
+![station list](https://i.imgur.com/6WPdYAy.png)
+
+2. Move down the list and user the **Delivery**, **Username** & **Password** data to quickly get your spots where they need to go.
+
+3. Once a spot has uploaded you can click the ```E-mail Reps``` button to bring up a filled-out e-mail window (via Apple Mail or Outlook) referencing the ISCIs in that project. Also, you can click on the checkboxes to keep track as you go down the list:
+![e-mail example](https://i.imgur.com/GrFVxky.png)
+
+## Bonus: Station Master List
+
+One last note: Inside the ```station_specs``` folder is another HTML file called ```station-info-master.html```. Double click this file to see a master list of all the stations in your ```stationSpecs.jsx``` file with an interface that's easier on the eyes.
+
+There you go! Hopefully this package will help to streamline your distribution process. If you have any questions or issues feel free to contact me via Github.
